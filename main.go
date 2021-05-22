@@ -5,9 +5,12 @@ import (
 	"context"
 	"errors"
 	"log"
+	"net/http"
 	"os"
 	"strconv"
+	"strings"
 
+	"github.com/chromedp/cdproto/network"
 	"github.com/chromedp/chromedp"
 	"github.com/vicanso/elton"
 	"github.com/vicanso/elton/middleware"
@@ -20,6 +23,7 @@ type screenshotParams struct {
 	Height  int
 	URL     string
 	Quality int
+	Header  http.Header
 }
 
 func captureScreenshot(ctx context.Context, params screenshotParams) ([]byte, error) {
@@ -33,12 +37,28 @@ func captureScreenshot(ctx context.Context, params screenshotParams) ([]byte, er
 
 	ctx, cancel := chromedp.NewContext(ctx)
 	defer cancel()
-	err := chromedp.Run(ctx,
+	actions := []chromedp.Action{
 		chromedp.EmulateViewport(int64(params.Height), int64(params.Height)),
-		// 打开页面
-		chromedp.Navigate(params.URL),
-		chromedp.FullScreenshot(&buf, params.Quality),
-	)
+	}
+	if len(params.Header) != 0 {
+		header := make(map[string]interface{})
+		for key, values := range params.Header {
+			header[key] = strings.Join(values, ", ")
+		}
+		actions = append(
+			actions,
+			network.Enable(),
+			network.SetExtraHTTPHeaders(header),
+		)
+	}
+
+	// 打开页面
+	actions = append(actions, chromedp.Navigate(params.URL))
+	// 截屏
+	actions = append(actions, chromedp.FullScreenshot(&buf, params.Quality))
+
+	err := chromedp.Run(ctx, actions...)
+
 	return buf, err
 }
 
@@ -54,6 +74,9 @@ func captureScreenshotHandler(c *elton.Context) (err error) {
 	params.Width, _ = strconv.Atoi(c.QueryParam("width"))
 	params.Height, _ = strconv.Atoi(c.QueryParam("height"))
 	params.Quality, _ = strconv.Atoi(c.QueryParam("quality"))
+	if c.QueryParam("overrideHeader") != "" {
+		params.Header = c.Request.Header
+	}
 	data, err := captureScreenshot(c.Context(), params)
 	if err != nil {
 		return

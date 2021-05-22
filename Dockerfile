@@ -16,6 +16,9 @@ RUN addgroup -g 1000 go \
   && apk add --no-cache ca-certificates tzdata
 
 COPY --from=builder /web-screenshot/web-screenshot /usr/local/bin/web-screenshot
+COPY --from=builder /web-screenshot/entrypoint.sh /entrypoint.sh
+
+EXPOSE 7000
 
 USER go
 
