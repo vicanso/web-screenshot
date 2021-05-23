@@ -30,6 +30,9 @@ type screenshotParams struct {
 }
 
 func captureScreenshot(ctx context.Context, params screenshotParams) ([]byte, error) {
+	// 设置1分钟超时
+	ctx, cancel := context.WithTimeout(ctx, time.Minute)
+	defer cancel()
 	var buf []byte
 	// 如果有配置dev tools ws url
 	if devtoolsWsURL != "" {
@@ -38,7 +41,7 @@ func captureScreenshot(ctx context.Context, params screenshotParams) ([]byte, er
 		ctx = allocatorContext
 	}
 
-	ctx, cancel := chromedp.NewContext(ctx)
+	ctx, cancel = chromedp.NewContext(ctx)
 	defer cancel()
 	actions := []chromedp.Action{
 		chromedp.EmulateViewport(int64(params.Height), int64(params.Height)),
@@ -56,7 +59,11 @@ func captureScreenshot(ctx context.Context, params screenshotParams) ([]byte, er
 	}
 
 	// 打开页面
-	actions = append(actions, chromedp.Navigate(params.URL))
+	actions = append(
+		actions,
+		// 此处理已包括判断page load
+		chromedp.Navigate(params.URL),
+	)
 
 	// 延时
 	if params.Delay != 0 {

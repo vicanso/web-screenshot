@@ -7,10 +7,11 @@ chromedep需要依赖于chrome，在服务器可直接使用`chromedp/headless-s
 ```bash
 docker run -d -p 9222:9222 --restart=always \
   --name headless-shell \
+  --shm-size=256m \
   chromedp/headless-shell
 ```
 
-上面版本的镜像中并没有提供中文字库的支持，如果需要支持中文，可以参考`Dockerfile_headless_chinese`的生成自定义镜像，或者可直接使用`vicanso/headless-shell`。
+上面版本的镜像中并没有提供中文字库的支持，如果需要支持中文，可以参考`Dockerfile_headless_chinese`的生成自定义镜像，或者可直接使用`vicanso/headless-shell`。docker指定更大的shm空间`--shm-size=256m`
 
 ```bash
 docker build -f Dockerfile_headless_chinese -t vicanso/headless-shell .
