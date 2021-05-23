@@ -32,3 +32,5 @@ docker run -d -p 7000:7000 \
 - `width`: 可选参数，浏览器的窗口宽度
 - `height`: 可选参数，浏览器的窗口高度
 - `overrideHeader`: 可选参数，是否覆盖请求的header，如果设置此参数，则以访问`/capture-screenshot`的请求头替换headless的默认请求头
+- `dalay`: 可选参数，延时等待后截屏，如delay=5s
+- `visible`: 可选参数，等待元素可见，如visible=#load，使用css选择器

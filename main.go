@@ -9,6 +9,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/chromedp/cdproto/network"
 	"github.com/chromedp/chromedp"
@@ -23,6 +24,8 @@ type screenshotParams struct {
 	Height  int
 	URL     string
 	Quality int
+	Visible string
+	Delay   time.Duration
 	Header  http.Header
 }
 
@@ -54,6 +57,16 @@ func captureScreenshot(ctx context.Context, params screenshotParams) ([]byte, er
 
 	// 打开页面
 	actions = append(actions, chromedp.Navigate(params.URL))
+
+	// 延时
+	if params.Delay != 0 {
+		actions = append(actions, chromedp.Sleep(params.Delay))
+	}
+	// 等待元素可访问
+	if params.Visible != "" {
+		actions = append(actions, chromedp.WaitVisible(params.Visible))
+	}
+
 	// 截屏
 	actions = append(actions, chromedp.FullScreenshot(&buf, params.Quality))
 
@@ -74,6 +87,8 @@ func captureScreenshotHandler(c *elton.Context) (err error) {
 	params.Width, _ = strconv.Atoi(c.QueryParam("width"))
 	params.Height, _ = strconv.Atoi(c.QueryParam("height"))
 	params.Quality, _ = strconv.Atoi(c.QueryParam("quality"))
+	params.Delay, _ = time.ParseDuration(c.QueryParam("delay"))
+	params.Visible = c.QueryParam("visible")
 	if c.QueryParam("overrideHeader") != "" {
 		params.Header = c.Request.Header
 	}
