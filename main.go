@@ -111,6 +111,13 @@ func captureScreenshotHandler(c *elton.Context) (err error) {
 func main() {
 	e := elton.New()
 
+	e.Use(middleware.NewLogger(middleware.LoggerConfig{
+		Format: middleware.LoggerShort,
+		OnLog: func(s string, c *elton.Context) {
+			log.Default().Println(s)
+		},
+	}))
+
 	e.Use(middleware.NewDefaultError())
 
 	e.GET("/ping", func(c *elton.Context) error {

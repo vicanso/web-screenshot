@@ -22,7 +22,7 @@ docker build -f Dockerfile_headless_chinese -t vicanso/headless-shell .
 
 ```bash
 docker run -d -p 7000:7000 \
-  -e DEV_TOOLS_WS_URL=ws://172.16.23.175:9222/devtools/browser/b9b7985c-f3e1-48d4-854f-6bdcc303d699 \
+  -e DEV_TOOLS_WS_URL=ws://172.16.23.175:9222/ \
   --name web-screenshot \
   vicanso/web-screenshot
 ```
