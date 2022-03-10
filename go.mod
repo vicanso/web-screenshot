@@ -3,9 +3,9 @@ module github.com/vicanso/web-screenshot
 go 1.17
 
 require (
-	github.com/chromedp/cdproto v0.0.0-20211112223831-e508c7bf6446
-	github.com/chromedp/chromedp v0.7.4
-	github.com/vicanso/elton v1.8.0
+	github.com/chromedp/cdproto v0.0.0-20220228194516-ead8cf59b1fa
+	github.com/chromedp/chromedp v0.7.8
+	github.com/vicanso/elton v1.8.3
 )
 
 require (
@@ -16,11 +16,11 @@ require (
 	github.com/gobwas/ws v1.1.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
-	github.com/tidwall/gjson v1.11.0 // indirect
+	github.com/tidwall/gjson v1.14.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
-	github.com/vicanso/hes v0.4.1 // indirect
+	github.com/vicanso/hes v0.5.0 // indirect
 	github.com/vicanso/intranet-ip v0.0.1 // indirect
 	github.com/vicanso/keygrip v1.2.1 // indirect
-	golang.org/x/sys v0.0.0-20211117180635-dee7805ff2e1 // indirect
+	golang.org/x/sys v0.0.0-20220209214540-3681064d5158 // indirect
 )

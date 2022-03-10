@@ -44,7 +44,7 @@ func captureScreenshot(ctx context.Context, params screenshotParams) ([]byte, er
 	ctx, cancel = chromedp.NewContext(ctx)
 	defer cancel()
 	actions := []chromedp.Action{
-		chromedp.EmulateViewport(int64(params.Height), int64(params.Height)),
+		chromedp.EmulateViewport(int64(params.Width), int64(params.Height)),
 	}
 	if len(params.Header) != 0 {
 		header := make(map[string]interface{})
